@@ -15,6 +15,15 @@ const DEFAULT_FRIDGE = [
   { name: '🫙 醬油',   status: 'low' },
 ];
 
+function getFridgeField(row, keys, fallback = '') {
+  for (const k of keys) {
+    if (Object.prototype.hasOwnProperty.call(row, k) && row[k] !== '' && row[k] != null) {
+      return row[k];
+    }
+  }
+  return fallback;
+}
+
 function renderFridge(data) {
   document.getElementById('fridge-grid').innerHTML = data.map(f => `
     <div class="fridge-item">
@@ -28,10 +37,13 @@ async function loadFridge() {
   try {
     const rows = await fetchSheet('Fridge');
     const data = rows
-      .filter(r => r['品項'])
+      .filter(r => {
+        const name = getFridgeField(r, ['品項', 'A'], '');
+        return name && name !== '品項'; // 排除表頭行
+      })
       .map(r => ({
-        name:   r['品項'],
-        status: FS_MAP[r['狀態']] || 'ok',
+        name:   getFridgeField(r, ['品項', 'A'], ''),
+        status: FS_MAP[getFridgeField(r, ['狀態', 'B'], '')] || 'ok',
       }));
     renderFridge(data.length > 0 ? data : DEFAULT_FRIDGE);
   } catch (e) {

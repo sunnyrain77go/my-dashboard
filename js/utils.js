@@ -78,7 +78,18 @@ async function fetchSheet(sheetName) {
   const r = await fetch(url);
   const text = await r.text();
   const json = JSON.parse(text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/)[1]);
-  const cols = json.table.cols.map(c => c.label);
+  const used = new Set();
+  const cols = json.table.cols.map((c, i) => {
+    // Some sheets return empty labels; fall back to column id (A/B/C...) or index key.
+    const base = (c.label && String(c.label).trim()) || c.id || `col_${i}`;
+    let key = base;
+    let n = 1;
+    while (used.has(key)) {
+      key = `${base}_${n++}`;
+    }
+    used.add(key);
+    return key;
+  });
   return json.table.rows.map(row => {
     const obj = {};
     row.c.forEach((cell, i) => { obj[cols[i]] = cell ? cell.v : ''; });

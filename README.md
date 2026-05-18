@@ -70,3 +70,17 @@ const CONFIG = {
 - Gemini API Key 透過 GitHub Actions 在 build 時注入，不會出現在原始碼裡
 - deploy 後的 `config.js` 在瀏覽器開發者工具仍可看到 Key（靜態網頁的限制）
 - 待辦勾選狀態存在瀏覽器 localStorage，清除瀏覽器資料會重置
+
+
+## local 測試
+進到專案目錄
+C:\Users\user\Documents\Projects\gitclondir\my-dashboard
+
+啟一個本機靜態伺服器（不要直接雙擊 html）
+PowerShell 執行：
+python -m http.server 5500
+
+瀏覽器開：
+http://localhost:5500
+
+你會看到完整 dashboard，Google Sheet 資料會直接從公開 Sheet 讀取（你目前的 SHEET_ID 已在 Projects/gitclondir/my-dashboard/js/config.js）。

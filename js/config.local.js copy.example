@@ -1,0 +1,15 @@
+// ═══════════════════════════════════════════════
+// config.local.js — 本機測試用（本地覆蓋設定）
+// ═══════════════════════════════════════════════
+// 
+// 使用方法：
+// 1. 複製此檔案為 config.local.js（去掉 .example）
+// 2. 填入你的 SHEET_ID 與 GEMINI_API_KEY（local 測試用）
+// 3. config.local.js 會在 config.js 之後加載，覆蓋占位符
+// 4. Git 會忽略 config.local.js，不會意外提交
+//
+// （Deploy 時 GitHub Actions 會用 Secrets 注入，本機設定會被忽略）
+
+// 取消下面的註釋，填入你的真實 ID 與 Key
+// CONFIG.SHEET_ID = '你的 Sheet ID';
+// CONFIG.GEMINI_KEY = '你的 Gemini API Key';

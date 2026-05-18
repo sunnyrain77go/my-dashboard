@@ -125,6 +125,8 @@
 
 <!-- JS：依賴順序載入 -->
 <script src="js/config.js"></script>
+<!-- 本機測試用：載入 local override（如果存在） -->
+<script src="js/config.local.js" onerror="console.log('config.local.js not found (normal for deploy)')"></script>
 <script src="js/utils.js"></script>
 <script src="js/mantra.js"></script>
 <script src="js/weather.js"></script>
