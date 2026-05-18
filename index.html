@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Judy's Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="wrap">
+
+  <!-- 頂部 -->
+  <div class="top-bar">
+    <div>
+      <div class="greeting-name">早安，<em>Judy</em> ✦</div>
+      <div class="greeting-date" id="date-str"></div>
+    </div>
+    <button class="ai-sum-btn" onclick="toggleAiSum()">✦ 今日 AI 摘要</button>
+  </div>
+
+  <!-- AI 摘要（折疊） -->
+  <div class="ai-sum-card" id="ai-sum-card">載入中…</div>
+
+  <div class="grid">
+
+    <!-- Row 1: 今日行程 | 待辦事項 -->
+    <div class="card">
+      <div class="sec-head">
+        <div class="card-label"><span>🗓</span> 今日行程</div>
+      </div>
+      <div class="event-list" id="today-events">
+        <div class="loading-text">讀取中…</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="sec-head">
+        <div class="card-label"><span>✅</span> 待辦事項</div>
+      </div>
+      <div class="todo-list" id="todo-list">
+        <div class="loading-text">讀取中…</div>
+      </div>
+    </div>
+
+    <!-- Row 2: 天氣 | 心情標語 -->
+    <div class="card">
+      <div class="card-label"><span>☁️</span> 今日天氣・攜帶提醒</div>
+      <div class="weather-main">
+        <div class="weather-icon" id="wx-icon">—</div>
+        <div>
+          <div class="weather-temp" id="wx-temp">—°C</div>
+          <div class="weather-desc" id="wx-desc">讀取中…</div>
+        </div>
+      </div>
+      <div class="pack-row" id="pack-row"></div>
+    </div>
+
+    <div class="mantra-card" onclick="nextMantra()">
+      <div class="mantra-tag">今日心境</div>
+      <div class="mantra-text" id="mantra-text"></div>
+      <div class="mantra-sub"  id="mantra-sub"></div>
+      <div class="mantra-dots" id="mantra-dots"></div>
+    </div>
+
+    <!-- Row 3: 本週行程（全寬） -->
+    <div class="card full">
+      <div class="card-label"><span>📅</span> 未來 7 天行程</div>
+      <div class="week-grid" id="week-grid"></div>
+    </div>
+
+    <!-- Row 4: 投資提醒 | 冰箱庫存 -->
+    <div class="card">
+      <div class="card-label"><span>📈</span> 投資提醒</div>
+      <div class="inv-row">
+        <div><div class="inv-name">MTX 小台</div><div class="inv-sub">多口</div></div>
+        <div class="inv-val" id="inv-mtx">—</div>
+      </div>
+      <div class="inv-row">
+        <div><div class="inv-name">TMF 微台</div></div>
+        <div class="inv-val" id="inv-tmf">—</div>
+      </div>
+      <div class="inv-row">
+        <div><div class="inv-name">結算日</div><div class="inv-sub">第三個星期三</div></div>
+        <div class="inv-val" id="inv-roll" style="color:var(--text2)">—</div>
+      </div>
+      <div class="inv-alert" id="inv-alert" style="display:none"></div>
+    </div>
+
+    <div class="card">
+      <div class="sec-head">
+        <div class="card-label"><span>🧊</span> 冰箱庫存</div>
+      </div>
+      <div class="fridge-grid" id="fridge-grid"></div>
+    </div>
+
+    <!-- Row 5: AI 助理（全寬） -->
+    <div class="card full">
+      <div class="card-label"><span>🤖</span> 問 AI 助理</div>
+      <div class="ai-bar">
+        <input class="ai-input" id="ai-q"
+          placeholder="今天最重要的事是什麼？本週有哪些重要行程？"
+          onkeydown="if(event.key==='Enter') askAI()">
+        <button class="ai-send" onclick="askAI()">送出</button>
+      </div>
+      <div class="ai-resp" id="ai-resp"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- 設定按鈕 -->
+<div class="settings-btn" onclick="toggleSettings()" title="設定">⚙️</div>
+<div class="settings-panel" id="settings-panel">
+  <h3>設定說明</h3>
+  <div class="setting-note">
+    <b>Gemini API Key</b> 請設定在 GitHub Repo 的<br>
+    Settings → Secrets → <code>GEMINI_API_KEY</code><br><br>
+    <b>Google Sheet ID</b> 請修改 <code>js/config.js</code><br><br>
+    設定完成後重新 push，GitHub Actions 會自動 deploy。
+  </div>
+  <button class="save-btn" onclick="saveSettings()">關閉</button>
+</div>
+
+<!-- JS：依賴順序載入 -->
+<script src="js/config.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/mantra.js"></script>
+<script src="js/weather.js"></script>
+<script src="js/calendar.js"></script>
+<script src="js/todo.js"></script>
+<script src="js/fridge.js"></script>
+<script src="js/investment.js"></script>
+<script src="js/ai.js"></script>
+<script src="js/main.js"></script>
+
+</body>
+</html>
