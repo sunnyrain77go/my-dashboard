@@ -51,6 +51,26 @@ jobs:
             exit 1
           fi
 
+          python3 - <<'PY'
+          from pathlib import Path
+
+          content = Path("js/config.js").read_text(encoding="utf-8")
+          gemini_line = next((line.strip() for line in content.splitlines() if "GEMINI_KEY" in line), "")
+          sheet_line = next((line.strip() for line in content.splitlines() if "SHEET_ID" in line), "")
+
+          def extract_value(line: str) -> str:
+            parts = line.split("'", 2)
+            return parts[1] if len(parts) >= 2 else ""
+
+          gemini = extract_value(gemini_line)
+          sheet = extract_value(sheet_line)
+
+          print(f"Debug: GEMINI_KEY length in config.js = {len(gemini)}")
+          print(f"Debug: SHEET_ID length in config.js   = {len(sheet)}")
+          print(f"Debug: GEMINI placeholder left? {'%%GEMINI_API_KEY%%' in content}")
+          print(f"Debug: SHEET placeholder left?  {'%%SHEET_ID%%' in content}")
+          PY
+
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
