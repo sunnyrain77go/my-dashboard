@@ -46,13 +46,14 @@ function renderTodayEvents() {
 function renderWeekGrid() {
   const grid = document.getElementById('week-grid');
   grid.innerHTML = '';
-  const today = new Date();
-  today.setHours(0,0,0,0);
+  const startDate = new Date();
+  startDate.setHours(0,0,0,0);
+  startDate.setDate(startDate.getDate() + 1);
 
   for (let i = 0; i < 7; i++) {
-    const d = new Date(today);
-    d.setDate(today.getDate() + i);
-    const isToday = i === 0;
+    const d = new Date(startDate);
+    d.setDate(startDate.getDate() + i);
+    const isToday = false;
     const evts = allEvents
       .filter(e => isSameDay(e.start, d))
       .sort((a, b) => a.start - b.start);
