@@ -29,7 +29,6 @@ jobs:
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY || vars.GEMINI_API_KEY }}
           SHEET_ID: ${{ secrets.SHEET_ID || vars.SHEET_ID }}
-          BUILD_ID: ${{ github.run_number }}
         run: |
           if [ -z "$GEMINI_API_KEY" ] || [ -z "$SHEET_ID" ]; then
             echo "::error::Missing GEMINI_API_KEY or SHEET_ID. Set them in Secrets or Variables before deploy."
@@ -38,22 +37,32 @@ jobs:
 
           python3 - <<'PY'
           from pathlib import Path
+          import json
           import os
+          import re
 
           path = Path("js/config.js")
-          content = path.read_text(encoding="utf-8")
-          content = content.replace("%%GEMINI_API_KEY%%", os.environ["GEMINI_API_KEY"])
-          content = content.replace("%%SHEET_ID%%", os.environ["SHEET_ID"])
-          path.write_text(content, encoding="utf-8")
+          old_content = path.read_text(encoding="utf-8")
 
-          index_path = Path("index.html")
-          index_content = index_path.read_text(encoding="utf-8")
-          index_content = index_content.replace("%%BUILD_ID%%", os.environ["BUILD_ID"])
-          index_path.write_text(index_content, encoding="utf-8")
+          user_match = re.search(r"USER_NAME\s*:\s*'([^']*)'", old_content)
+          user_name = user_match.group(1) if user_match else "Judy"
+
+          data = {
+              "GEMINI_KEY": os.environ["GEMINI_API_KEY"],
+              "SHEET_ID": os.environ["SHEET_ID"],
+              "USER_NAME": user_name,
+          }
+
+          header = (
+              "// Auto-generated at deploy time by GitHub Actions.\n"
+              "// Do not commit secrets to this file.\n\n"
+          )
+          new_content = header + "const CONFIG = " + json.dumps(data, ensure_ascii=False, indent=2) + ";\n"
+          path.write_text(new_content, encoding="utf-8")
           PY
 
           if grep -q "%%GEMINI_API_KEY%%\|%%SHEET_ID%%" js/config.js; then
-            echo "::error::Placeholder replacement failed in js/config.js"
+            echo "::error::config.js still contains placeholders"
             exit 1
           fi
 
