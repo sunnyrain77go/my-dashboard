@@ -42,16 +42,17 @@
 
 ### 1. Fork / Clone 這個 Repo
 
-### 2. 設定 GitHub Secret
+### 2. 設定 GitHub Secrets（或 Variables）
 - Repo → Settings → Secrets and variables → Actions
-- 新增 Secret：`GEMINI_API_KEY` = 你的 Gemini API Key
+- 新增 `GEMINI_API_KEY` = 你的 Gemini API Key
   （取得方式：[Google AI Studio](https://aistudio.google.com/app/apikey)）
+- 新增 `SHEET_ID` = 你的 Google Sheet ID
 
-### 3. 修改 config.js
+### 3. 修改 config.js（僅名稱）
 ```js
 const CONFIG = {
   GEMINI_KEY: '%%GEMINI_API_KEY%%',   // 不要動，由 Actions 注入
-  SHEET_ID:   '你的 Google Sheet ID', // ← 改這個
+  SHEET_ID:   '%%SHEET_ID%%',         // 不要動，由 Actions 注入
   USER_NAME:  'Judy',                  // ← 改成你的名字
 };
 ```
@@ -67,7 +68,7 @@ const CONFIG = {
 
 ## 注意事項
 
-- Gemini API Key 透過 GitHub Actions 在 build 時注入，不會出現在原始碼裡
+- Gemini API Key 與 Sheet ID 透過 GitHub Actions 在 build 時注入，不會出現在原始碼裡
 - deploy 後的 `config.js` 在瀏覽器開發者工具仍可看到 Key（靜態網頁的限制）
 - 待辦勾選狀態存在瀏覽器 localStorage，清除瀏覽器資料會重置
 
@@ -83,4 +84,4 @@ python -m http.server 5500
 瀏覽器開：
 http://localhost:5500
 
-你會看到完整 dashboard，Google Sheet 資料會直接從公開 Sheet 讀取（你目前的 SHEET_ID 已在 Projects/gitclondir/my-dashboard/js/config.js）。
+你會看到完整 dashboard，Google Sheet 資料會直接從公開 Sheet 讀取（本機可用 `js/config.local.js` 覆蓋 `SHEET_ID` 與 `GEMINI_KEY`）。

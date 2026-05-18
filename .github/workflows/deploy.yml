@@ -26,9 +26,30 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Inject Secrets into config.js
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY || vars.GEMINI_API_KEY }}
+          SHEET_ID: ${{ secrets.SHEET_ID || vars.SHEET_ID }}
         run: |
-          sed -i "s|%%GEMINI_API_KEY%%|${{ secrets.GEMINI_API_KEY }}|g" js/config.js
-          sed -i "s|%%SHEET_ID%%|${{ secrets.SHEET_ID }}|g" js/config.js
+          if [ -z "$GEMINI_API_KEY" ] || [ -z "$SHEET_ID" ]; then
+            echo "::error::Missing GEMINI_API_KEY or SHEET_ID. Set them in Secrets or Variables before deploy."
+            exit 1
+          fi
+
+          python3 - <<'PY'
+          from pathlib import Path
+          import os
+
+          path = Path("js/config.js")
+          content = path.read_text(encoding="utf-8")
+          content = content.replace("%%GEMINI_API_KEY%%", os.environ["GEMINI_API_KEY"])
+          content = content.replace("%%SHEET_ID%%", os.environ["SHEET_ID"])
+          path.write_text(content, encoding="utf-8")
+          PY
+
+          if grep -q "%%GEMINI_API_KEY%%\|%%SHEET_ID%%" js/config.js; then
+            echo "::error::Placeholder replacement failed in js/config.js"
+            exit 1
+          fi
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
