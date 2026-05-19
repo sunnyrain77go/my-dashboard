@@ -43,44 +43,69 @@ function renderTodayEvents() {
   `).join('');
 }
 
-function renderWeekGrid() {
-  const grid = document.getElementById('week-grid');
-  grid.innerHTML = '';
-  const startDate = new Date();
-  startDate.setHours(0,0,0,0);
-  startDate.setDate(startDate.getDate() + 1);
+// ── 月曆（4週，從今天所在週開始）──
+function renderMonthCalendar() {
+  const wrap = document.getElementById('month-cal');
+  if (!wrap) return;
+  wrap.innerHTML = '';
 
-  for (let i = 0; i < 7; i++) {
+  const today = new Date();
+  today.setHours(0,0,0,0);
+
+  const startDate = new Date(today);
+  startDate.setDate(today.getDate() - today.getDay());
+
+  // 標頭
+  const header = document.createElement('div');
+  header.className = 'cal-head';
+  ['日','一','二','三','四','五','六'].forEach(d => {
+    const cell = document.createElement('div');
+    cell.className = 'cal-dname';
+    cell.textContent = `週${d}`;
+    header.appendChild(cell);
+  });
+  wrap.appendChild(header);
+
+  // 格線
+  const grid = document.createElement('div');
+  grid.className = 'cal-grid';
+
+  for (let i = 0; i < 28; i++) {
     const d = new Date(startDate);
     d.setDate(startDate.getDate() + i);
-    const isToday = false;
+    const isToday = isSameDay(d, today);
+    const isPast  = d < today && !isToday;
+
     const evts = allEvents
       .filter(e => isSameDay(e.start, d))
       .sort((a, b) => a.start - b.start);
 
-    const col = document.createElement('div');
-    col.className = 'week-col';
-    const dayName = DAYS[d.getDay()];
-    const dateNum = d.getDate();
+    const cell = document.createElement('div');
+    cell.className = 'cal-cell' + (isPast ? ' past' : '') + (isToday ? ' today' : '');
 
-    col.innerHTML = `
-      <div class="week-hdr">
-        <div class="week-dname">週${dayName}</div>
-        <div class="week-dnum${isToday ? ' today' : ''}">
-          ${isToday ? `<div>${dateNum}</div>` : dateNum}
-        </div>
-      </div>
-      ${evts.length === 0
-        ? '<div class="week-none">—</div>'
-        : evts.map(e =>
-            `<div class="week-ev wev-${e.color}" title="${e.title}">
-              ${fmt(e.start) ? fmt(e.start) + ' ' : ''}${e.title}
-            </div>`
-          ).join('')
-      }
-    `;
-    grid.appendChild(col);
+    const num = document.createElement('div');
+    num.className = 'cal-datenum';
+    num.textContent = d.getDate() === 1 ? `${d.getMonth()+1}/1` : d.getDate();
+    cell.appendChild(num);
+
+    evts.slice(0, 2).forEach(e => {
+      const ev = document.createElement('div');
+      ev.className = `cal-ev cal-ev-${e.color}`;
+      ev.title = e.title;
+      ev.textContent = (fmt(e.start) ? fmt(e.start) + ' ' : '') + e.title;
+      cell.appendChild(ev);
+    });
+
+    if (evts.length > 2) {
+      const more = document.createElement('div');
+      more.className = 'cal-more';
+      more.textContent = `+${evts.length - 2} 項`;
+      cell.appendChild(more);
+    }
+
+    grid.appendChild(cell);
   }
+  wrap.appendChild(grid);
 }
 
 async function loadCalendar() {
@@ -103,7 +128,7 @@ async function loadCalendar() {
     allEvents = DEFAULT_EVENTS;
   }
   renderTodayEvents();
-  renderWeekGrid();
+  renderMonthCalendar();
 }
 
 loadCalendar();

@@ -172,25 +172,73 @@ body::before {
 .event-empty { font-size: 13px; color: var(--text3); text-align: center; padding: 12px 0; }
 .loading-text { font-size: 12px; color: var(--text3); font-style: italic; }
 
-/* ── 本週週曆 ── */
-.week-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
-.week-col { display: flex; flex-direction: column; gap: 3px; }
-.week-hdr { text-align: center; padding-bottom: 6px; border-bottom: 0.5px solid var(--border); margin-bottom: 4px; }
-.week-dname { font-size: 10px; color: var(--text3); letter-spacing: 0.04em; }
-.week-dnum { font-size: 15px; font-weight: 500; color: var(--text); line-height: 1.4; }
-.week-dnum.today {
-  background: var(--accent); color: #fff;
-  border-radius: 50%;
-  width: 24px; height: 24px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 12px; margin: 0 auto;
+/* ── 月曆（4週）── */
+.cal-head {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  margin-bottom: 4px;
 }
-.week-ev { font-size: 9.5px; padding: 2px 4px; border-radius: 4px; line-height: 1.4; word-break: break-all; }
-.wev-teal   { background: #E1F0EB; color: #2A6B5A; }
-.wev-coral  { background: #F5E8DE; color: #8A3A12; }
-.wev-purple { background: #EDE8F5; color: #52308A; }
-.wev-gray   { background: var(--bg2); color: var(--text2); }
-.week-none  { font-size: 10px; color: var(--border); text-align: center; margin-top: 4px; }
+.cal-dname {
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--text3);
+  text-align: center;
+  padding: 4px 0;
+  letter-spacing: 0.04em;
+}
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-auto-rows: 82px;
+  gap: 1px;
+  background: var(--border2);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.cal-cell {
+  background: var(--card);
+  padding: 5px 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  overflow: hidden;
+}
+.cal-cell.past { background: var(--bg2); }
+.cal-cell.today { background: rgba(74,124,111,0.05); }
+.cal-datenum {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text);
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  flex-shrink: 0;
+  line-height: 1;
+}
+.cal-cell.past .cal-datenum { color: var(--text3); }
+.cal-cell.today .cal-datenum {
+  background: var(--accent);
+  color: #fff;
+}
+.cal-ev {
+  font-size: 9.5px;
+  padding: 1px 5px;
+  border-radius: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.55;
+}
+.cal-ev-teal   { background: #E1F0EB; color: #085041; }
+.cal-ev-coral  { background: #FAECE7; color: #4A1B0C; }
+.cal-ev-purple { background: #EEEDFE; color: #26215C; }
+.cal-ev-gray   { background: var(--bg2); color: var(--text2); }
+.cal-more { font-size: 9px; color: var(--text3); padding: 0 4px; }
 
 /* ── 待辦 ── */
 .todo-list { display: flex; flex-direction: column; gap: 7px; }
