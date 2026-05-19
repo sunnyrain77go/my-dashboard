@@ -119,7 +119,7 @@ async function loadCalendar() {
         start: parseDateTime(r['開始時間']),
         end:   parseDateTime(r['結束時間']),
         desc:  r['行程描述'] || '',
-        color: calColor(r['日曆名稱'] || ''),
+        color: r['顏色'] || r['color'] || calColor(r['日曆名稱'] || ''),
       }))
       .filter(e => e.start && !isNaN(e.start.getTime()));
 
