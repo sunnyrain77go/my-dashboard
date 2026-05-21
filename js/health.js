@@ -40,12 +40,22 @@ function initSupplements() {
         ${group.items.map((item, ii) => {
           const key = `${gi}-${ii}`;
           const checked = done.includes(key);
-          return `<span class="supp-pill${checked ? ' taken' : ''}"
-            onclick="toggleSupp('${key}', this)">${item}</span>&nbsp;`;
+          return `<button type="button" class="supp-pill${checked ? ' taken' : ''}" data-key="${key}">${item}</button>`;
         }).join('')}
       </div>
     </div>
   `).join('');
+}
+
+function bindSupplementClicks() {
+  const el = document.getElementById('supplement-list');
+  if (!el) return;
+
+  el.addEventListener('click', (event) => {
+    const pill = event.target.closest('.supp-pill');
+    if (!pill || !el.contains(pill)) return;
+    toggleSupp(pill.dataset.key, pill);
+  });
 }
 
 function toggleSupp(key, el) {
@@ -71,4 +81,5 @@ function initDiet() {
 }
 
 initSupplements();
+bindSupplementClicks();
 initDiet();

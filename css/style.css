@@ -301,6 +301,8 @@ body::before {
   padding-left: 18px;
 }
 .supp-pill {
+  appearance: none;
+  -webkit-appearance: none;
   font-size: 10px;
   padding: 2px 8px;
   border-radius: 20px;
@@ -311,6 +313,7 @@ body::before {
   transition: all 0.15s;
   user-select: none;
   line-height: 1.5;
+  font-family: inherit;
 }
 .supp-pill:hover { background: var(--bg3); }
 .supp-pill.taken {
