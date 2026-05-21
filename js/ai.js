@@ -7,7 +7,8 @@ async function callGemini(prompt) {
   if (!key || key === '%%GEMINI_API_KEY%%') {
     return '⚠️ Gemini API Key 尚未設定，請確認 GitHub Secret GEMINI_API_KEY 已設定並重新 deploy。';
   }
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`;
+  // const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`;
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${key}`;
   const r = await fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
