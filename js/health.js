@@ -41,7 +41,7 @@ function initSupplements() {
           const key = `${gi}-${ii}`;
           const checked = done.includes(key);
           return `<span class="supp-pill${checked ? ' taken' : ''}"
-            onclick="toggleSupp('${key}', this)">${item}</span>`;
+            onclick="toggleSupp('${key}', this)">${item}</span>&nbsp;`;
         }).join('')}
       </div>
     </div>
